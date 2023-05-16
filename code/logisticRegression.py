@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv('../datasets/fraud_prediction_es.csv')
+df = pd.read_csv('../datasets/fraud_prediction.csv')
 
 # Splitting the data into training and test sets
 from sklearn.model_selection import train_test_split
@@ -75,4 +75,26 @@ plt.legend(
 )
 plt.ylabel('Accuracy Score')
 plt.xlabel('C (Inverse regularization strength)')
-plt.show()
+#plt.show()
+
+# Standarize & Scale
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+
+pipeline_order = [
+    ('scaler', StandardScaler()),
+    ('logistic_reg', linear_model.LogisticRegression(C=10, penalty='l1', solver='liblinear'))
+]
+
+pipeline = Pipeline(pipeline_order)
+logistic_regression_scaled = pipeline.fit(x_train, y_train)
+
+print('Scaled score', logistic_regression_scaled.score(x_test, y_test))
+
+# printing out the coefficients of each variable
+
+print(logistic_regression.coef_)
+
+# printing the intercept of the model
+
+print(logistic_regression.intercept_)
