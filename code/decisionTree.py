@@ -47,4 +47,4 @@ data = tree.export_graphviz(dt, out_file=None, feature_names=feature_names.colum
 
 graph = pydotplus.graph_from_dot_data(data)
 
-Image(graph.create_png())
+graph.write_pdf("tree.pdf")
