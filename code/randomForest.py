@@ -22,18 +22,21 @@ from sklearn.ensemble import RandomForestClassifier
 
 rf_classifier = RandomForestClassifier(random_state=50)
 rf_classifier.fit(x_train, y_train)
-rf_classifier.score(x_test, y_test)
+print(rf_classifier.score(x_test, y_test))
 
-from sklearn.model_selection import GridSearchCV
+### Best parameters
+# from sklearn.model_selection import GridSearchCV
 
-grid_params = {
-    'n_estimators': [100, 200, 300, 400, 5000],
-    'max_depth': [1, 2, 4, 6, 8],
-    'min_samples_leaf': [0.05, 0.1, 0.2]
-}
+# grid_params = {
+#     'n_estimators': [10, 20, 30, 40, 50],
+#     'max_depth': [1, 2, 4, 6, 8],
+#     'min_samples_leaf': [0.05, 0.1, 0.2]
+# }
 
-grid_object = GridSearchCV(estimator=rf_classifier, param_grid=grid_params, scoring='accuracy', cv=3, n_jobs=-1)
-grid_object.fit(x_train, y_train)
+# grid_object = GridSearchCV(estimator=rf_classifier, param_grid=grid_params, scoring='accuracy', cv=3, n_jobs=-1)
+# grid_object.fit(x_train, y_train)
 
-grid_object.best_params_
-rf_best = grid_object.best_estimator_
+# grid_object.best_params_
+# rf_best = grid_object.best_estimator_
+
+# print(rf_best)
