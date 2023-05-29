@@ -1,2 +1,5 @@
+pip install -U scikit-learn
+
 pip install ipython
 pip install graphviz
+pip install scikit-plot

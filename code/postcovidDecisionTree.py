@@ -7,6 +7,9 @@ df.gender = pd.factorize(df.gender)[0]
 df.age = pd.factorize(df.age)[0]
 df.country = pd.factorize(df.country)[0]
 
+# from sklearn.naive_bayes import GaussianNB
+# from sklearn.linear_model import LinearRegression
+
 features = df.drop(
     [
         'transtornos_mentales',
