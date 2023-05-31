@@ -35,18 +35,21 @@ x_train, x_test, y_train, y_test = train_test_split(
     stratify=target
 )
 
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.naive_bayes import GaussianNB
 
-dt = DecisionTreeClassifier(criterion='gini', random_state=50, max_depth=10, min_samples_leaf=0.01)
-dt.fit(x_train, y_train)
+nb_classifier = GaussianNB()
 
-print(dt.score(x_test, y_test))
+nb_classifier.fit(x_train, y_train)
 
-y_pred = dt.predict(x_test)
+# Extract the score accuracy
+print(nb_classifier.score(x_test, y_test))
 
-# View the prediction results
-print("Actual labels:", y_test)
-print("Predicted labels:", y_pred)
+# from sklearn.tree import DecisionTreeClassifier
+
+# dt = DecisionTreeClassifier(criterion='gini', random_state=50, max_depth=10, min_samples_leaf=0.01)
+# dt.fit(x_train, y_train)
+
+# print(dt.score(x_test, y_test))
 
 # from sklearn.model_selection import GridSearchCV
 
