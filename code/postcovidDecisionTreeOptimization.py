@@ -1,6 +1,13 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
+from sklearn import decomposition, datasets
+from sklearn import tree
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import GridSearchCV, cross_val_score
+from sklearn.preprocessing import StandardScaler
+
+
 df = pd.read_csv('../datasets/4 PostCovid v2.csv')
 
 df.gender = pd.factorize(df.gender)[0]
@@ -44,7 +51,37 @@ print(dt.score(x_test, y_test))
 
 y_pred = dt.predict(x_test)
 
-print(y_pred)
+#print(y_pred)
+
+
+std_slc = StandardScaler()
+pca = decomposition.PCA()
+dtreeReg = tree.DecisionTreeRegressor()
+
+pipe = Pipeline(steps=[("std_slc", std_slc),
+                           ("pca", pca),
+                           ("dtreeReg", dtreeReg)])
+
+n_components = list(range(1,x_train.shape[1]+1,1))
+
+criterion = ["friedman_mse", "mse"]
+max_depth = [4,6,8,10]
+
+parameters = dict(pca__n_components=n_components,
+                      dtreeReg__criterion=criterion,
+                      dtreeReg__max_depth=max_depth)
+
+clf = GridSearchCV(pipe, parameters)
+clf.fit(x_train, y_train)
+
+print("Best Number Of Components:", clf.best_estimator_.get_params()["pca__n_components"])
+print(); print(clf.best_estimator_.get_params()["dtreeReg"])
+
+CV_Result = cross_val_score(clf, x_train, y_train, cv=3, n_jobs=-1, scoring="r2")
+print(); print(CV_Result)
+print(); print(CV_Result.mean())
+print(); print(CV_Result.std())
+
 
 # from sklearn.model_selection import GridSearchCV
 

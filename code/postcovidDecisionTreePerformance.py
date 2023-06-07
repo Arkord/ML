@@ -37,14 +37,28 @@ x_train, x_test, y_train, y_test = train_test_split(
 
 from sklearn.tree import DecisionTreeClassifier
 
-dt = DecisionTreeClassifier(criterion='gini', random_state=50, max_depth=10, min_samples_leaf=0.01)
+dt = DecisionTreeClassifier(criterion='gini', random_state=50, max_depth=15, min_samples_leaf=0.01, splitter='best')
 dt.fit(x_train, y_train)
 
 print(dt.score(x_test, y_test))
 
-y_pred = dt.predict(x_test)
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
 
-print(y_pred)
+pipeline_order = [
+    ('scaler', StandardScaler()),
+    ('treeperformance', DecisionTreeClassifier(criterion='gini', random_state=50, max_depth=15, min_samples_leaf=0.01, splitter='best'))
+]
+
+pipeline = Pipeline(pipeline_order)
+
+treeperformance = pipeline.fit(x_train, y_train)
+
+print('Standarized', treeperformance.score(x_test, y_test))
+
+#y_pred = dt.predict(x_test)
+
+#print(y_pred)
 
 # from sklearn.model_selection import GridSearchCV
 

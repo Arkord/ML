@@ -35,16 +35,17 @@ x_train, x_test, y_train, y_test = train_test_split(
     stratify=target
 )
 
-from sklearn.tree import DecisionTreeClassifier
+from sklearn import linear_model
+linear_reg = linear_model.LinearRegression()
+linear_reg.fit(x_train, y_train)
 
-dt = DecisionTreeClassifier(criterion='gini', random_state=50, max_depth=10, min_samples_leaf=0.01)
-dt.fit(x_train, y_train)
+print(linear_reg.score(x_test, y_test))
+# from sklearn.tree import DecisionTreeClassifier
 
-print(dt.score(x_test, y_test))
+# dt = DecisionTreeClassifier(criterion='gini', random_state=50, max_depth=10, min_samples_leaf=0.01)
+# dt.fit(x_train, y_train)
 
-y_pred = dt.predict(x_test)
-
-print(y_pred)
+# print(dt.score(x_test, y_test))
 
 # from sklearn.model_selection import GridSearchCV
 
