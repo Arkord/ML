@@ -1,11 +1,10 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-df = pd.read_csv('../datasets/4 PostCovid v2.csv')
+df = pd.read_csv('../datasets/4 PostCovid v3.csv')
 
 df.gender = pd.factorize(df.gender)[0]
 df.age = pd.factorize(df.age)[0]
-df.country = pd.factorize(df.country)[0]
 
 # from sklearn.naive_bayes import GaussianNB
 # from sklearn.linear_model import LinearRegression
@@ -30,31 +29,38 @@ target = df['ansiedad'].values
 x_train, x_test, y_train, y_test = train_test_split(
     features,
     target,
-    test_size=0.3,
+    test_size=0.2,
     random_state=42,
     stratify=target
 )
 
 from sklearn.tree import DecisionTreeClassifier
 
-dt = DecisionTreeClassifier(criterion='gini', random_state=50, max_depth=15, min_samples_leaf=0.01, splitter='best')
+dt = DecisionTreeClassifier(criterion='gini', random_state=50, max_depth=15, min_samples_leaf=0.10, splitter='best')
 dt.fit(x_train, y_train)
 
 print(dt.score(x_test, y_test))
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
+from sklearn.pipeline import make_pipeline
 
-pipeline_order = [
-    ('scaler', StandardScaler()),
-    ('treeperformance', DecisionTreeClassifier(criterion='gini', random_state=50, max_depth=15, min_samples_leaf=0.01, splitter='best'))
-]
+pipe = make_pipeline(StandardScaler(), DecisionTreeClassifier(criterion='gini', random_state=50, max_depth=15, min_samples_leaf=0.10, splitter='best'))
 
-pipeline = Pipeline(pipeline_order)
+pipe.fit(x_train, y_train)
 
-treeperformance = pipeline.fit(x_train, y_train)
+Pipeline(steps=[('standardscaler', StandardScaler()),
+                ('tree', DecisionTreeClassifier(criterion='gini', random_state=50, max_depth=15, min_samples_leaf=0.10, splitter='best'))])
 
-print('Standarized', treeperformance.score(x_test, y_test))
+print("standarized", pipe.score(x_test, y_test))
+
+y_pred = dt.predict(x_test)
+print(set(y_test) - set(y_pred))
+
+from sklearn.metrics import classification_report, confusion_matrix
+
+print(confusion_matrix(y_test, y_pred))
+print(classification_report(y_test, y_pred))
 
 #y_pred = dt.predict(x_test)
 

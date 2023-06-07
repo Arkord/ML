@@ -1,11 +1,10 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-df = pd.read_csv('../datasets/4 PostCovid v2.csv')
+df = pd.read_csv('../datasets/4 PostCovid v3.csv')
 
 df.gender = pd.factorize(df.gender)[0]
 df.age = pd.factorize(df.age)[0]
-df.country = pd.factorize(df.country)[0]
 
 # from sklearn.naive_bayes import GaussianNB
 # from sklearn.linear_model import LinearRegression
