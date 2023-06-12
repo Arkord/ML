@@ -17,7 +17,20 @@ data = pd.read_csv('../datasets/4 PostCovid v3.csv')
 # Convert categorical variables to one-hot encoded representation
 data = pd.get_dummies(data)
 
-X = data.drop('ansiedad', axis=1)  # Features
+# Atributos a excluir
+exclude = [
+        'miedo_generalizado',
+        'ideacion_suicida',
+        'aislamiento',
+        'estres',
+        'perdida_memoria',
+        'niebla_cerebral',
+        'depresion',
+        'enrojecimiento_ojos',
+        'ansiedad'
+    ]
+
+X = data.drop(exclude, axis=1)  # Features
 y = data['ansiedad']                # Target variable
 
 # Step 2: Split the data into training and test sets
@@ -52,6 +65,7 @@ y_pred = pipeline.predict(X_test)
 # print("Accuracy:", accuracy)
 
 print("Score", pipeline.score(X_test, y_test))
+print(classification_report(y_test, y_pred))
 
 # Step 6: Compute the confusion matrix
 cm = confusion_matrix(y_test, y_pred)
