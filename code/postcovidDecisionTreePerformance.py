@@ -19,6 +19,7 @@ features = df.drop(
         'perdida_memoria',
         'niebla_cerebral',
         'depresion',
+        'enrojecimiento_ojos',
         'ansiedad'
     ]
     , axis = 1).values
@@ -29,7 +30,7 @@ target = df['ansiedad'].values
 x_train, x_test, y_train, y_test = train_test_split(
     features,
     target,
-    test_size=0.2,
+    test_size=0.3,
     random_state=42,
     stratify=target
 )
@@ -59,8 +60,10 @@ print(set(y_test) - set(y_pred))
 
 from sklearn.metrics import classification_report, confusion_matrix
 
-print(confusion_matrix(y_test, y_pred))
+print("matrix", confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
+
+print(df.shape)
 
 #y_pred = dt.predict(x_test)
 
