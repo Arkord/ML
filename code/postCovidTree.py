@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
 
 from sklearn.pipeline import Pipeline
 
@@ -15,10 +15,12 @@ import matplotlib.pyplot as plt
 data = pd.read_csv('../datasets/4 PostCovid v3.csv')
 
 # Convert categorical variables to one-hot encoded representation
-data = pd.get_dummies(data)
+# data = pd.get_dummies(data)
 
 # Atributos a excluir
 exclude = [
+        'gender',
+        'age',
         'miedo_generalizado',
         'ideacion_suicida',
         'aislamiento',
@@ -27,11 +29,21 @@ exclude = [
         'niebla_cerebral',
         'depresion',
         'enrojecimiento_ojos',
-        'ansiedad'
+        'ansiedad',
+        'transtornos_mentales'
     ]
 
-X = data.drop(exclude, axis=1)  # Features
-y = data['ansiedad']                # Target variable
+X = data.drop(exclude, axis=1) # Features
+categoricalY = data['transtornos_mentales'] # Target variable
+
+# onehot_encoder = OneHotEncoder(sparse=False)
+# y = onehot_encoder.fit_transform(categoricalY.values.reshape(-1, 1))
+
+label_encoder = LabelEncoder()
+y = label_encoder.fit_transform(categoricalY)
+
+print(categoricalY)
+print(y)
 
 # Step 2: Split the data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
