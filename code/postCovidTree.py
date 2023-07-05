@@ -1,4 +1,6 @@
 import pandas as pd
+import numpy as np
+
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report
@@ -46,7 +48,7 @@ print(categoricalY)
 print(y)
 
 # Step 2: Split the data into training and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, )
 
 # Step 2.1: Standardize the numeric features
 # scaler = StandardScaler()
@@ -80,14 +82,33 @@ print("Score", pipeline.score(X_test, y_test))
 print(classification_report(y_test, y_pred))
 
 # Step 6: Compute the confusion matrix
-cm = confusion_matrix(y_test, y_pred)
+labels = ["Anxiety", "Depression", "Estres"]
+
+y_true_labels = label_encoder.inverse_transform(y_test)
+y_pred_labels = label_encoder.inverse_transform(y_pred)
+
+cm = confusion_matrix(y_true_labels, y_pred_labels, labels=labels)
 
 # Step 7: Visualize the confusion matrix
 sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
 plt.xlabel('Predicted Labels')
 plt.ylabel('True Labels')
-plt.title('Confusion Matrix - Ansiedad')
+
+tick_marks = np.arange(len(labels))
+plt.xticks(tick_marks, labels)
+plt.yticks(tick_marks, labels)
+
+plt.title('Confusion Matrix - Trastornos mentales')
 plt.show()
+
+# sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+# plt.xlabel('Predicted Labels')
+# plt.ylabel('True Labels')
+# tick_marks = np.arange(len(labels))
+# plt.xticks(tick_marks, labels)
+# plt.yticks(tick_marks, labels)
+# plt.title('Confusion Matrix - Trastornos mentales')
+# plt.show()
 
 # Step 6: Compute evaluation metrics
 # metrics = classification_report(y_test, y_pred, output_dict=True)
