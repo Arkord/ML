@@ -6,6 +6,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
 
+from sklearn.utils.multiclass import unique_labels
+
 from sklearn.pipeline import Pipeline
 
 from sklearn.metrics import confusion_matrix
@@ -14,7 +16,7 @@ import matplotlib.pyplot as plt
 
 # Step 1: Prepare the data
 # Assume you have a CSV file 'data.csv' with the features in columns and the target variable in the last column.
-data = pd.read_csv('../datasets/4 PostCovid v4.csv')
+data = pd.read_csv('../datasets/4 PostCovid v51.csv')
 
 # Convert categorical variables to one-hot encoded representation
 # data = pd.get_dummies(data)
@@ -48,7 +50,7 @@ print(categoricalY)
 print(y)
 
 # Step 2: Split the data into training and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, )
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42, )
 
 # Step 2.1: Standardize the numeric features
 # scaler = StandardScaler()
@@ -78,14 +80,20 @@ y_pred = pipeline.predict(X_test)
 # accuracy = accuracy_score(y_test, y_pred)
 # print("Accuracy:", accuracy)
 
+# unique_classes = unique_labels(y_test, y_pred)
+
+# print(unique_classes)
+
+y_true_labels = label_encoder.inverse_transform(y_test)
+y_pred_labels = label_encoder.inverse_transform(y_pred)
+
 print("Score", pipeline.score(X_test, y_test))
-print(classification_report(y_test, y_pred))
+print(classification_report(y_true_labels, y_pred_labels))
 
 # Step 6: Compute the confusion matrix
 labels = ["Anxiety", "Depression", "Stress"]
 
-y_true_labels = label_encoder.inverse_transform(y_test)
-y_pred_labels = label_encoder.inverse_transform(y_pred)
+
 
 cm = confusion_matrix(y_true_labels, y_pred_labels, labels=labels)
 
