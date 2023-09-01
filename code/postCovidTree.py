@@ -49,13 +49,13 @@ y = label_encoder.fit_transform(categoricalY)
 print(categoricalY)
 print(y)
 
-# Step 2: Split the data into training and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42, )
+# Split the data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, )
 
 # Step 2.1: Standardize the numeric features
-# scaler = StandardScaler()
-# X_train = scaler.fit_transform(X_train)
-# X_test = scaler.transform(X_test)
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
 
 # Step 3: Create and train the decision tree classifier
 # clf = DecisionTreeClassifier(criterion='gini', random_state=50, max_depth=20, splitter='best')
