@@ -29,24 +29,24 @@ print(logistic_regression.score(x_test, y_test))
 #print(y_test)
 
 # Fine tuning hyperparameters
-# from sklearn.model_selection import GridSearchCV
-# logistic_regression = linear_model.LogisticRegression(penalty='l1', solver='liblinear')
+from sklearn.model_selection import GridSearchCV
+logistic_regression = linear_model.LogisticRegression(penalty='l1', solver='liblinear')
 
-# grid = GridSearchCV(
-#     logistic_regression,
-#     {
-#         'C': [
-#             0.0001,
-#             0.001,
-#             0.01,
-#             0.1,
-#             10
-#         ]
-#     }
-# )
-# grid.fit(x_train, y_train)
+grid = GridSearchCV(
+    logistic_regression,
+    {
+        'C': [
+            0.0001,
+            0.001,
+            0.01,
+            0.1,
+            10
+        ]
+    }
+)
+grid.fit(x_train, y_train)
 
-# print("the most optimal inverse regularization strenght is:", grid.best_params_)
+print("the most optimal inverse regularization strenght is:", grid.best_params_)
 
 ### Check GridSearchCV Plot
 train_errors = []

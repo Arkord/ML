@@ -69,17 +69,17 @@ print(df.shape)
 
 #print(y_pred)
 
-# from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV
 
-# grid_params = {
-#     'max_depth': [1, 2, 3, 4, 5, 6],
-#     'min_samples_leaf': [0.01, 0.02, 0.04, 0.06, 0.08]
-# }
+grid_params = {
+    'max_depth': [1, 2, 3, 4, 5, 6],
+    'min_samples_leaf': [0.01, 0.02, 0.04, 0.06, 0.08]
+}
 
-# grid_object = GridSearchCV(estimator=dt, param_grid= grid_params, scoring='accuracy', cv=10, n_jobs=-1)
-# grid_object.fit(x_train, y_train)
+grid_object = GridSearchCV(estimator=dt, param_grid= grid_params, scoring='accuracy', cv=10, n_jobs=-1)
+grid_object.fit(x_train, y_train)
 
-# print('Best parameters for decision Tree:', grid_object.best_params_)
+print('Best parameters for decision Tree:', grid_object.best_params_)
 
 # from six import StringIO
 # from IPython.display import Image

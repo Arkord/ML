@@ -3,8 +3,8 @@ import numpy as np
 
 from sklearn.model_selection import train_test_split
 
+from sklearn import linear_model
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 
 from sklearn.metrics import classification_report
@@ -71,9 +71,9 @@ pipeline_tree = Pipeline([
     ('classifier', DecisionTreeClassifier(criterion='gini', random_state=50, max_depth=20, splitter='best'))
 ])
 
-pipeline_knn = Pipeline([
+pipeline_logistic = Pipeline([
     ('scaler', StandardScaler()),
-    ('classifier', KNeighborsClassifier())
+    ('classifier',  linear_model.LogisticRegression())
 ])
 
 pipeline_bayes = Pipeline([
@@ -83,7 +83,7 @@ pipeline_bayes = Pipeline([
 
 pipes = [
     { "name": "TREE", "method": pipeline_tree }, 
-     { "name": "KNN", "method": pipeline_knn }, 
+     { "name": "LOGISTIC", "method": pipeline_logistic }, 
      { "name": "BAYES", "method": pipeline_bayes }
 ]
 
@@ -91,7 +91,7 @@ for pipe in pipes:
 
     print("-------------------> ", pipe["name"])
 
-    pipe["method"].fit(X_train,y_train)
+    #pipe["method"].fit(X_train,y_train)
 
     # Step 4: Train the pipeline
     pipe["method"].fit(X_train, y_train)
