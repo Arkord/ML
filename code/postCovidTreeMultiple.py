@@ -20,24 +20,16 @@ import matplotlib.pyplot as plt
 
 # Step 1: Prepare the data
 # Assume you have a CSV file 'data.csv' with the features in columns and the target variable in the last column.
-data = pd.read_csv('C:/Users/octavio.mejia/Documents/proyectos/ml/datasets/4 PostCovid v51.csv')
+data = pd.read_csv('C:/Users/octavio.mejia/Documents/proyectos/ml/datasets/4 PostCovid v52.csv')
 
 # Convert categorical variables to one-hot encoded representation
 # data = pd.get_dummies(data)
 
 # Atributos a excluir
 exclude = [
-        'gender',
-        'age',
-        'miedo_generalizado',
-        'ideacion_suicida',
-        'aislamiento',
-        'estres',
-        'perdida_memoria',
-        'niebla_cerebral',
-        'depresion',
+        'genero',
+        'edad',
         'enrojecimiento_ojos',
-        'ansiedad',
         'transtornos_mentales'
     ]
 
@@ -83,8 +75,8 @@ pipeline_bayes = Pipeline([
 
 pipes = [
     { "name": "TREE", "method": pipeline_tree }, 
-     { "name": "LOGISTIC", "method": pipeline_logistic }, 
-     { "name": "BAYES", "method": pipeline_bayes }
+     #{ "name": "LOGISTIC", "method": pipeline_logistic }, 
+     #{ "name": "BAYES", "method": pipeline_bayes }
 ]
 
 for pipe in pipes:
@@ -117,23 +109,23 @@ for pipe in pipes:
     print(classification_report(y_true_labels, y_pred_labels))
 
     # Step 6: Compute the confusion matrix
-    labels = ["Anxiety", "Depression", "Stress"]
+    labels = ["Anxiety", "Depression", "Isolation", "Memory Loss", "None of the above", "Stress"]
 
 
 
     cm = confusion_matrix(y_true_labels, y_pred_labels, labels=labels)
 
-    # Step 7: Visualize the confusion matrix
-    # sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
-    # plt.xlabel('Predicted Labels')
-    # plt.ylabel('True Labels')
+    #Step 7: Visualize the confusion matrix
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+    plt.xlabel('Predicted Labels')
+    plt.ylabel('True Labels')
 
-    # tick_marks = np.arange(len(labels))
-    # plt.xticks(tick_marks, labels)
-    # plt.yticks(tick_marks, labels)
+    tick_marks = np.arange(len(labels))
+    plt.xticks(tick_marks, labels)
+    plt.yticks(tick_marks, labels)
 
-    # plt.title('Confusion Matrix - Trastornos mentales')
-    # plt.show()
+    plt.title('Confusion Matrix - Trastornos mentales')
+    plt.show()
 
     # sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
     # plt.xlabel('Predicted Labels')
