@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 
 # Step 1: Prepare the data
 # Assume you have a CSV file 'data.csv' with the features in columns and the target variable in the last column.
-data = pd.read_csv('C:/Users/octavio.mejia/Documents/proyectos/ml/datasets/4 PostCovid v52.csv')
+data = pd.read_csv('../datasets/4 PostCovid v52.csv')
 
 # Convert categorical variables to one-hot encoded representation
 # data = pd.get_dummies(data)
@@ -75,8 +75,8 @@ pipeline_bayes = Pipeline([
 
 pipes = [
     { "name": "TREE", "method": pipeline_tree }, 
-     #{ "name": "LOGISTIC", "method": pipeline_logistic }, 
-     #{ "name": "BAYES", "method": pipeline_bayes }
+    #  { "name": "LOGISTIC", "method": pipeline_logistic }, 
+    #  { "name": "BAYES", "method": pipeline_bayes }
 ]
 
 for pipe in pipes:
@@ -90,6 +90,7 @@ for pipe in pipes:
 
     # Step 5: Make predictions on the test set
     y_pred = pipe["method"].predict(X_test)
+    predicted_probabilities = pipe["method"].predict_proba(X_test)
 
     # # Step 4: Make predictions on the test set
     # y_pred = clf.predict(X_test)
@@ -125,7 +126,7 @@ for pipe in pipes:
     plt.yticks(tick_marks, labels)
 
     plt.title('Confusion Matrix - Trastornos mentales')
-    plt.show()
+    #plt.show()
 
     # sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
     # plt.xlabel('Predicted Labels')
@@ -160,3 +161,6 @@ for pipe in pipes:
     # plt.legend()
     # plt.show()
 
+    for i in range(len(X_test)):
+        print(f"Predicted Class: {y_pred_labels[i]}, Probabilities: {predicted_probabilities[i]}")
+        #print(y_pred_labels)
