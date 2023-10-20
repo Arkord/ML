@@ -74,8 +74,8 @@ pipeline_bayes = Pipeline([
 ])
 
 pipes = [
-    { "name": "TREE", "method": pipeline_tree }, 
-    #  { "name": "LOGISTIC", "method": pipeline_logistic }, 
+    # { "name": "TREE", "method": pipeline_tree }, 
+      { "name": "LOGISTIC", "method": pipeline_logistic }, 
     #  { "name": "BAYES", "method": pipeline_bayes }
 ]
 
@@ -91,6 +91,8 @@ for pipe in pipes:
     # Step 5: Make predictions on the test set
     y_pred = pipe["method"].predict(X_test)
     predicted_probabilities = pipe["method"].predict_proba(X_test)
+
+    predicted_labels = np.argmax(predicted_probabilities, axis=1)
 
     # # Step 4: Make predictions on the test set
     # y_pred = clf.predict(X_test)
