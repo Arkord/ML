@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 
 # Step 1: Prepare the data
 # Assume you have a CSV file 'data.csv' with the features in columns and the target variable in the last column.
-data = pd.read_csv('../datasets/4 PostCovid v52.csv')
+data = pd.read_csv('..\datasets\4 PostCovid v52.csv')
 
 # Convert categorical variables to one-hot encoded representation
 # data = pd.get_dummies(data)
@@ -74,95 +74,48 @@ pipeline_bayes = Pipeline([
 ])
 
 pipes = [
-    { "name": "TREE", "method": pipeline_tree }, 
+    #{ "name": "TREE", "method": pipeline_tree }, 
     { "name": "LOGISTIC", "method": pipeline_logistic }, 
-    { "name": "BAYES", "method": pipeline_bayes }
+    #{ "name": "BAYES", "method": pipeline_bayes }
 ]
 
-for pipe in pipes:
+from sklearn.inspection import DecisionBoundaryDisplay
+for multi_class in ("multinomial", "ovr"):
+    clf = linear_model.LogisticRegression(
+        solver="sag", max_iter=100, random_state=42, multi_class=multi_class
+    ).fit(X, y)
 
-    print("-------------------> ", pipe["name"])
+    # print the training scores
+    print("training score : %.3f (%s)" % (clf.score(X, y), multi_class))
 
-    #pipe["method"].fit(X_train,y_train)
+    _, ax = plt.subplots()
+    DecisionBoundaryDisplay.from_estimator(
+        clf, X, response_method="predict", cmap=plt.cm.Paired, ax=ax
+    )
+    plt.title("Decision surface of LogisticRegression (%s)" % multi_class)
+    plt.axis("tight")
 
-    # Step 4: Train the pipeline
-    pipe["method"].fit(X_train, y_train)
+    # Plot also the training points
+    colors = "bry"
+    for i, color in zip(clf.classes_, colors):
+        idx = np.where(y == i)
+        plt.scatter(
+            X[idx, 0], X[idx, 1], c=color, cmap=plt.cm.Paired, edgecolor="black", s=20
+        )
 
-    # Step 5: Make predictions on the test set
-    y_pred = pipe["method"].predict(X_test)
-    predicted_probabilities = pipe["method"].predict_proba(X_test)
+    # Plot the three one-against-all classifiers
+    xmin, xmax = plt.xlim()
+    ymin, ymax = plt.ylim()
+    coef = clf.coef_
+    intercept = clf.intercept_
 
-    predicted_labels = np.argmax(predicted_probabilities, axis=1)
+    def plot_hyperplane(c, color):
+        def line(x0):
+            return (-(x0 * coef[c, 0]) - intercept[c]) / coef[c, 1]
 
-    # # Step 4: Make predictions on the test set
-    # y_pred = clf.predict(X_test)
+        plt.plot([xmin, xmax], [line(xmin), line(xmax)], ls="--", color=color)
 
-    # Step 5: Evaluate the model's accuracy
-    # accuracy = accuracy_score(y_test, y_pred)
-    # print("Accuracy:", accuracy)
+    for i, color in zip(clf.classes_, colors):
+        plot_hyperplane(i, color)
 
-    # unique_classes = unique_labels(y_test, y_pred)
-
-    # print(unique_classes)
-
-    y_true_labels = label_encoder.inverse_transform(y_test)
-    y_pred_labels = label_encoder.inverse_transform(y_pred)
-
-    print("Score", pipe["method"].score(X_test, y_test))
-    print(classification_report(y_true_labels, y_pred_labels))
-
-    # Step 6: Compute the confusion matrix
-    labels = ["Anxiety", "Depression", "Isolation", "Memory Loss", "None of the above", "Stress"]
-
-
-
-    cm = confusion_matrix(y_true_labels, y_pred_labels, labels=labels)
-
-    #Step 7: Visualize the confusion matrix
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
-    plt.xlabel('Predicted Labels')
-    plt.ylabel('True Labels')
-
-    tick_marks = np.arange(len(labels))
-    plt.xticks(tick_marks, labels)
-    plt.yticks(tick_marks, labels)
-
-    plt.title('Confusion Matrix - Trastornos mentales')
-    #plt.show()
-
-    # sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
-    # plt.xlabel('Predicted Labels')
-    # plt.ylabel('True Labels')
-    # tick_marks = np.arange(len(labels))
-    # plt.xticks(tick_marks, labels)
-    # plt.yticks(tick_marks, labels)
-    # plt.title('Confusion Matrix - Trastornos mentales')
-    # plt.show()
-
-    # Step 6: Compute evaluation metrics
-    # metrics = classification_report(y_test, y_pred, output_dict=True)
-
-    # # Step 7: Prepare the data for plotting
-    # class_names = list(metrics.keys())[:2]
-    # precision = [metrics[class_name]['precision'] for class_name in class_names]
-    # recall = [metrics[class_name]['recall'] for class_name in class_names]
-    # f1_score = [metrics[class_name]['f1-score'] for class_name in class_names]
-
-    # # Step 8: Plot the metrics
-    # x = range(len(class_names))
-    # width = 0.2
-
-    # plt.bar(x, precision, width, label='Precision')
-    # plt.bar(x, recall, width, label='Recall', bottom=precision)
-    # plt.bar(x, f1_score, width, label='F1-score', bottom=[p + r for p, r in zip(precision, recall)])
-
-    # plt.xlabel('Class')
-    # plt.ylabel('Score')
-    # plt.title('Evaluation Metrics')
-    # plt.xticks(x, class_names)
-    # plt.legend()
-    # plt.show()
-
-    for i in range(len(X_test)):
-        print(f"Predicted Class: {y_pred_labels[i]}, Probabilities: {predicted_probabilities[i]}")
-        #print(y_pred_labels)
+plt.show()
