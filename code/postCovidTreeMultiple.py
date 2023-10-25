@@ -74,8 +74,8 @@ pipeline_bayes = Pipeline([
 ])
 
 pipes = [
-    # { "name": "TREE", "method": pipeline_tree }, 
-      { "name": "LOGISTIC", "method": pipeline_logistic }, 
+     { "name": "TREE", "method": pipeline_tree }, 
+    #  { "name": "LOGISTIC", "method": pipeline_logistic }, 
     #  { "name": "BAYES", "method": pipeline_bayes }
 ]
 
@@ -166,3 +166,10 @@ for pipe in pipes:
     for i in range(len(X_test)):
         print(f"Predicted Class: {y_pred_labels[i]}, Probabilities: {predicted_probabilities[i]}")
         #print(y_pred_labels)
+
+# 6 - Estress
+# 5 - Ninguna
+# 4 - Pérdida de memoria
+# 3 - Aislamiento
+# 2 - Depresión
+# 1 - Ansidedad

@@ -85,28 +85,49 @@ from sklearn.decomposition import PCA
 scaler = StandardScaler()
 X = scaler.fit_transform(X)
 
-# Apply PCA to reduce the data to 2 dimensions
+from sklearn.decomposition import PCA
+ 
+# Reduce from 4 to 2 features with PCA
 pca = PCA(n_components=2)
-X_pca = pca.fit_transform(X)
+ 
+# Fit and transform data
+pca_features = pca.fit_transform(X)
+ 
+# Create dataframe
+pca_df = pd.DataFrame(
+    data=pca_features, 
+    columns=['PC1', 'PC2'])
+ 
+# map target names to PCA features   
+target_names = {
+    0:'Ansidedad',
+    1:'Depresión',
+    2:'Aislamiento',
+    3:'Pérdida de memoria',
+    4: 'Ninguna',
+    5:'Estres',
+}
+ 
+pca_df['Secuela'] = y
+pca_df['Secuela'] = pca_df['Secuela'].map(target_names)
 
-# Initializing and training the logistic regression model
-model = linear_model.LogisticRegression()
-model.fit(X_pca, y)
+pca_df.head()
+sns.set()
+ 
+sns.lmplot(
+    x='PC1', 
+    y='PC2', 
+    data=pca_df, 
+    hue='Secuela', 
+    fit_reg=False, 
+    legend=True
+    )
+ 
 
-# Predicting probabilities for each class
-probabilities = model.predict_proba(X_pca)
-
-# Plotting the scatter plot and coloring points based on predicted probabilities
-plt.figure(figsize=(8, 6))
-plt.scatter(X_pca[:, 0], X_pca[:, 1], c=probabilities[:, 2], cmap='coolwarm', edgecolors='k', s=50, alpha=0.8)
-plt.colorbar(label='Predicted Probability (Class 1)')
-plt.xlabel('Principal Component 1')
-plt.ylabel('Principal Component 2')
-plt.title('Logistic Regression Prediction Results (2D)')
-
-# Access explained variance ratio for each principal component
 explained_var_ratio = pca.explained_variance_ratio_
 print("Explained Variance Ratio for PC1:", explained_var_ratio[0])
 print("Explained Variance Ratio for PC2:", explained_var_ratio[1])
 
+plt.title('Gráfico PCA')
 plt.show()
+
