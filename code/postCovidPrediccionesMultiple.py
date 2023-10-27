@@ -74,8 +74,8 @@ pipeline_bayes = Pipeline([
 ])
 
 pipes = [
-     { "name": "TREE", "method": pipeline_tree }, 
-    #  { "name": "LOGISTIC", "method": pipeline_logistic }, 
+    # { "name": "TREE", "method": pipeline_tree }, 
+    { "name": "LOGISTIC", "method": pipeline_logistic }, 
     #  { "name": "BAYES", "method": pipeline_bayes }
 ]
 
@@ -116,19 +116,19 @@ for pipe in pipes:
 
 
 
-    cm = confusion_matrix(y_true_labels, y_pred_labels, labels=labels)
+    # cm = confusion_matrix(y_true_labels, y_pred_labels, labels=labels)
 
-    #Step 7: Visualize the confusion matrix
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
-    plt.xlabel('Predicted Labels')
-    plt.ylabel('True Labels')
+    # #Step 7: Visualize the confusion matrix
+    # sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+    # plt.xlabel('Predicted Labels')
+    # plt.ylabel('True Labels')
 
-    tick_marks = np.arange(len(labels))
-    plt.xticks(tick_marks, labels)
-    plt.yticks(tick_marks, labels)
+    # tick_marks = np.arange(len(labels))
+    # plt.xticks(tick_marks, labels)
+    # plt.yticks(tick_marks, labels)
 
-    plt.title('Confusion Matrix - Trastornos mentales')
-    #plt.show()
+    # plt.title('Confusion Matrix - Trastornos mentales')
+    # #plt.show()
 
     # sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
     # plt.xlabel('Predicted Labels')
@@ -139,7 +139,7 @@ for pipe in pipes:
     # plt.title('Confusion Matrix - Trastornos mentales')
     # plt.show()
 
-    # Step 6: Compute evaluation metrics
+    # # Step 6: Compute evaluation metrics
     # metrics = classification_report(y_test, y_pred, output_dict=True)
 
     # # Step 7: Prepare the data for plotting
@@ -164,7 +164,11 @@ for pipe in pipes:
     # plt.show()
 
     for i in range(len(X_test)):
-        print(f"Predicted Class: {y_pred_labels[i]}, Probabilities: {predicted_probabilities[i]}")
+        str_value = []
+        for j in range(len(predicted_probabilities[i])):
+            str_value.append(f"{predicted_probabilities[i][j]:.4%}")
+            
+        print(f"Predicted Class: {y_pred_labels[i]}, Probabilities: { str_value} ")
         #print(y_pred_labels)
 
 # 6 - Estress

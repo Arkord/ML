@@ -79,34 +79,24 @@ pipes = [
     #{ "name": "BAYES", "method": pipeline_bayes }
 ]
 
-from sklearn.decomposition import PCA
+for pipe in pipes:
+    print("-------------------> ", pipe["name"])
 
-# Standardize the features
-scaler = StandardScaler()
-X = scaler.fit_transform(X)
+    pipe["method"].fit(X_train, y_train)
+    y_pred = pipe["method"].predict(X_test)
 
-# Apply PCA to reduce the data to 2 dimensions
-pca = PCA(n_components=2)
-X_pca = pca.fit_transform(X)
+    y_pred = pipe["method"].predict(X_test)
+    predicted_probabilities = pipe["method"].predict_proba(X_test)
 
-# Initializing and training the logistic regression model
-model = linear_model.LogisticRegression()
-model.fit(X_pca, y)
+    predicted_labels = np.argmax(predicted_probabilities, axis=1)
 
-# Predicting probabilities for each class
-probabilities = model.predict_proba(X_pca)
+    y_true_labels = label_encoder.inverse_transform(y_test)
+    y_pred_labels = label_encoder.inverse_transform(y_pred)
 
-# Plotting the scatter plot and coloring points based on predicted probabilities
-plt.figure(figsize=(8, 6))
-plt.scatter(X_pca[:, 0], X_pca[:, 1], c=probabilities[:, 2], cmap='coolwarm', edgecolors='k', s=50, alpha=0.8)
-plt.colorbar(label='Predicted Probability (Class 1)')
-plt.xlabel('Principal Component 1')
-plt.ylabel('Principal Component 2')
-plt.title('Logistic Regression Prediction Results (2D)')
+    from sklearn.metrics import precision_recall_curve
 
-# Access explained variance ratio for each principal component
-explained_var_ratio = pca.explained_variance_ratio_
-print("Explained Variance Ratio for PC1:", explained_var_ratio[0])
-print("Explained Variance Ratio for PC2:", explained_var_ratio[1])
-
-plt.show()
+    # Assuming clf is your classifier, and X_test, y_test are your test data
+    disp = precision_recall_curve(X_test, y_test)
+    disp.ax_.set_title('2-class Precision-Recall curve: AP={0:0.2f}'.format(
+                        disp.average_precision))
+    plt.show()
