@@ -74,8 +74,8 @@ pipeline_bayes = Pipeline([
 ])
 
 pipes = [
-    # { "name": "TREE", "method": pipeline_tree }, 
-    { "name": "LOGISTIC", "method": pipeline_logistic }, 
+    { "name": "TREE", "method": pipeline_tree }, 
+    # { "name": "LOGISTIC", "method": pipeline_logistic }, 
     #  { "name": "BAYES", "method": pipeline_bayes }
 ]
 
