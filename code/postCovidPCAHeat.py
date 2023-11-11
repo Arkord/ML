@@ -146,7 +146,7 @@ plt.figure(figsize=(16, 8))
 
 y_axis_labels = ["PC1", "PC2"]
 
-s = sns.heatmap(df_comp, yticklabels=y_axis_labels, cmap='viridis')
+s = sns.heatmap(df_comp, yticklabels=y_axis_labels, cmap='plasma')
 plt.xticks(fontsize=10)
 
 print(df_comp)
