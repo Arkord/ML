@@ -108,7 +108,12 @@ for pipe in pipes:
     y_true_labels = label_encoder.inverse_transform(y_test)
     y_pred_labels = label_encoder.inverse_transform(y_pred)
 
+    from sklearn.metrics import accuracy_score
+
     print("Score", pipe["method"].score(X_test, y_test))
+    # accuracy = accuracy_score(y_test, y_pred)
+    # print(f"Accuracy: {accuracy}")
+
     print(classification_report(y_true_labels, y_pred_labels))
 
     # Step 6: Compute the confusion matrix

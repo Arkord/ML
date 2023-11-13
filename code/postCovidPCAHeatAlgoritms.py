@@ -29,28 +29,40 @@ data = pd.read_csv('C:/Users/octavio.mejia/Documents/proyectos/ml/datasets/4 Pos
 
 # Atributos a excluir
 exclude = [
-         'genero',
+        'genero',
         'edad',
         'enrojecimiento_ojos',
         'transtornos_mentales',
+        'enfermedad_transmitible',
+        'enfermedad_no_transmitible',	
+        'enfermedad_organos_cuerpo',	
+        'enfermedad_respiratoria',
+        'goteo_nasal',
+        'vomito',
+        'palpitaciones',
+        'erupcion_cutanea',
+        'malestar_postesfuerzo',
+        'tinnitus',
+        'dolor_ardor_nervioso',
+        'dolor_agudo_costillas',
+        'dolor_garganta',
+        'estornudos',
+        # 'ideacion_suicida',
+        # 'aislamiento',
+        # 'estres',
+        # 'perdida_memoria',
+        # 'niebla_cerebral',	
+        # 'depresion',
+        # 'ansiedad',
         # 'enfermedad_transmitible',
         # 'enfermedad_no_transmitible',	
         # 'enfermedad_organos_cuerpo',	
         # 'enfermedad_respiratoria',
-        # 'goteo_nasal',
-        # 'vomito',
-        # 'palpitaciones',
-        # 'erupcion_cutanea',
-        # 'malestar_postesfuerzo',
-        # 'tinnitus',
-        # 'dolor_ardor_nervioso',
-        # 'dolor_agudo_costillas',
-        # 'dolor_garganta',
-        # 'estornudos',
+        # 'enrojecimiento_ojos'
 
     ]
 
-X = data.drop(exclude, axis=1) # Features
+X_raw = data.drop(exclude, axis=1) # Features
 XHeat = data.drop(exclude, axis=1) # Features for PCA Heat
 
 categoricalY = data['transtornos_mentales'] # Target variable
@@ -64,13 +76,16 @@ y = label_encoder.fit_transform(categoricalY)
 print(categoricalY)
 print(y)
 
+scaler = StandardScaler()
+X = scaler.fit_transform(X_raw)
+
 # Split the data into training and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, )
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, )
 
 # Step 2.1: Standardize the numeric features
-scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
+# scaler = StandardScaler()
+# X_train = scaler.fit_transform(X_train)
+# X_test = scaler.transform(X_test)
 
 # Step 3: Create and train the decision tree classifier
 # clf = DecisionTreeClassifier(criterion='gini', random_state=50, max_depth=20, splitter='best')
@@ -109,35 +124,64 @@ pipes = [
     { "name": "RANDOM FOREST", "method": pipeline_randomforest }
 ]
 
-from sklearn.decomposition import PCA
-
 # Standardize the features
-scaler = StandardScaler()
-X = scaler.fit_transform(X)
+# scaler = StandardScaler()
+# X = scaler.fit_transform(X)
 
 from sklearn.decomposition import PCA
  
-# Reduce from 4 to 2 features with PCA
-pca = PCA(n_components=2)
- 
+# X_train_scaled = scaler.fit_transform(X_train)
+# X_test_scaled = scaler.transform(X_test)
+
+# Apply PCA
+for i in range(1, 25):
+    print(f'Component {i}')
+    n_components = i  # Choose the number of components to keep
+    pca = PCA(n_components=n_components)
+
+    X_train_pca = pca.fit_transform(X_train)
+
+    # Fit a logistic regression model on the reduced data
+    pipe = pipes[4]
+    name = pipe["name"]
+
+    model = pipe["method"]
+    model.fit(X_train, y_train)
+    print(model.score(X_test, y_test))
+
+    model_pca = pipe["method"]
+    X_test_pca = pca.transform(X_test)
+    model_pca.fit(X_train_pca, y_train)
+    print(model_pca.score(X_test_pca, y_test))
+
+# Make predictions on the test set
+y_pred = model.predict(X_test_pca)
+
+
+print(f"***********************************************")
+
+#print("Score", model.score(y_test, y_pred))
+#print("standarized", model.score(X_test, y_pred))
+
+
 # Fit and transform data
-pca_features = pca.fit_transform(X)
+# pca_features = pca.fit_transform(X)
  
 # Create dataframe
 pca_df = pd.DataFrame(
-    data=pca_features, 
+    data=X_train_pca, 
     columns=['PC1', 'PC2'])
  
 # map target names to PCA features   
 target_names = {
-    #0:'Ansiedad',
-    # 1:'Depresión',
-    # 2:'Estrés',
-     3:'Ninguna',
-    # 4:'Pérdida de memoria'
+    0:'Ansiedad',
+    1:'Depresión',
+    2:'Estrés',
+    3:'Ninguna',
+    4:'Pérdida de memoria'
 }
  
-pca_df['Secuela'] = y
+pca_df['Secuela'] = y_train
 pca_df['Secuela'] = pca_df['Secuela'].map(target_names)
 
 pca_df.head()
@@ -163,7 +207,7 @@ print("Explained Variance Ratio for PC2:", explained_var_ratio[1])
 # plt.ylim(-4,6)
 # plt.show()
 
-print(pca.components_)
+#print(pca.components_)
 #data_top = XHeat.head() 
 
 # print(XHeat.columns)
@@ -172,8 +216,8 @@ plt.figure(figsize=(16, 8))
 
 y_axis_labels = ["PC1", "PC2"]
 
-s = sns.heatmap(df_comp, yticklabels=y_axis_labels, cmap='plasma')
+s = sns.heatmap(df_comp, yticklabels=y_axis_labels, cmap='viridis')
 plt.xticks(fontsize=10)
 
-print(df_comp)
+#print(df_comp)
 plt.show()
