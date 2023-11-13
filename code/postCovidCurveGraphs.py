@@ -124,100 +124,36 @@ pipes = [
     { "name": "RANDOM FOREST", "method": pipeline_randomforest }
 ]
 
-# Standardize the features
-# scaler = StandardScaler()
-# X = scaler.fit_transform(X)
+from sklearn.metrics import precision_recall_curve, auc
+from sklearn.metrics import roc_curve, auc
+import matplotlib.pyplot as plt
+from sklearn.datasets import make_multilabel_classification
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import label_binarize
+from sklearn.multiclass import OneVsRestClassifier
 
-from sklearn.decomposition import PCA
- 
-# X_train_scaled = scaler.fit_transform(X_train)
-# X_test_scaled = scaler.transform(X_test)
+# Binarizar las etiquetas para la clasificación multiclase
+y_train_bin = label_binarize(y_train, classes=[0, 1, 2, 3, 4])
+y_test_bin = label_binarize(y_test, classes=[0, 1, 2, 3, 4])
 
-# Apply PCA
-#for i in range(1, 25):
-#print(f'Component {i}')
-n_components = 2  # Choose the number of components to keep
-pca = PCA(n_components=n_components)
+# Entrenar un modelo (por ejemplo, regresión logística) con estrategia "uno contra todos"
+mtype = pipes[0]
+model = OneVsRestClassifier(mtype["method"])
+model.fit(X_train, y_train_bin)
 
-X_train_pca = pca.fit_transform(X_train)
+# Obtener probabilidades de predicción en el conjunto de prueba
+y_scores = model.predict_proba(X_test)
 
-# Fit a logistic regression model on the reduced data
-pipe = pipes[1]
-name = pipe["name"]
+# Calcular la curva de precisión-recuperación para cada clase
+precision = dict()
+recall = dict()
+for i in range(5):  # 3 clases en este ejemplo
+    precision[i], recall[i], _ = precision_recall_curve(y_test_bin[:, i], y_scores[:, i])
+    auc_score = auc(recall[i], precision[i])
+    plt.plot(recall[i], precision[i], label=f'Class {i} (AUC = {auc_score:.2f})')
 
-model = pipe["method"]
-model.fit(X_train, y_train)
-print(model.score(X_test, y_test))
-
-model_pca = pipe["method"]
-X_test_pca = pca.transform(X_test)
-model_pca.fit(X_train_pca, y_train)
-print(model_pca.score(X_test_pca, y_test))
-
-# Make predictions on the test set
-y_pred = model.predict(X_test_pca)
-
-
-print(f"***********************************************")
-
-#print("Score", model.score(y_test, y_pred))
-#print("standarized", model.score(X_test, y_pred))
-
-
-# Fit and transform data
-# pca_features = pca.fit_transform(X)
- 
-# Create dataframe
-pca_df = pd.DataFrame(
-    data=X_train_pca, 
-    columns=['PC1', 'PC2'])
- 
-# map target names to PCA features   
-target_names = {
-    0:'Ansiedad',
-    1:'Depresión',
-    2:'Estrés',
-    3:'Ninguna',
-    4:'Pérdida de memoria'
-}
- 
-pca_df['Secuela'] = y_train
-pca_df['Secuela'] = pca_df['Secuela'].map(target_names)
-
-pca_df.head()
-sns.set()
- 
-sns.lmplot(
-    x='PC1', 
-    y='PC2', 
-    data=pca_df, 
-    hue='Secuela', 
-    fit_reg=False, 
-    legend=True,
-    palette={'Ansiedad': '#F72585', 'Depresión': '#7209B7', 'Estrés': '#b7094c', 'Ninguna': '#4CC9F0', 'Pérdida de memoria': '#4361EE'}
-    )
- 
-
-explained_var_ratio = pca.explained_variance_ratio_
-print("Explained Variance Ratio for PC1:", explained_var_ratio[0])
-print("Explained Variance Ratio for PC2:", explained_var_ratio[1])
-
-# plt.title('Gráfico PCA')
-# plt.xlim(-4,6)
-# plt.ylim(-4,6)
-# plt.show()
-
-#print(pca.components_)
-#data_top = XHeat.head() 
-
-# print(XHeat.columns)
-df_comp = pd.DataFrame(pca.components_, columns=XHeat.columns)
-plt.figure(figsize=(16, 8))
-
-y_axis_labels = ["PC1", "PC2"]
-
-s = sns.heatmap(df_comp, yticklabels=y_axis_labels, cmap='plasma')
-plt.xticks(fontsize=10)
-
-#print(df_comp)
+plt.xlabel('Recall')
+plt.ylabel('Precision')
+plt.title(f'Curva de Precisión - Recuperación para Clasificación Multiclase {mtype["name"]}')
+plt.legend()
 plt.show()
