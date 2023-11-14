@@ -132,12 +132,14 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import label_binarize
 from sklearn.multiclass import OneVsRestClassifier
 
+class_names = ['Ansiedad', 'Depresión', 'Estrés', 'Ninguna', 'Pérdida de memoria']
+
 # Binarizar las etiquetas para la clasificación multiclase
 y_train_bin = label_binarize(y_train, classes=[0, 1, 2, 3, 4])
 y_test_bin = label_binarize(y_test, classes=[0, 1, 2, 3, 4])
 
 # Entrenar un modelo (por ejemplo, regresión logística) con estrategia "uno contra todos"
-mtype = pipes[0]
+mtype = pipes[4]
 model = OneVsRestClassifier(mtype["method"])
 model.fit(X_train, y_train_bin)
 
@@ -154,6 +156,8 @@ for i in range(5):  # 3 clases en este ejemplo
 
 plt.xlabel('Recall')
 plt.ylabel('Precision')
-plt.title(f'Curva de Precisión - Recuperación para Clasificación Multiclase {mtype["name"]}')
+plt.title(f'Curva de Precisión - Recuperación para Clasificación Multiclase, modelo {mtype["name"]}')
 plt.legend()
+# plt.legend(labels=[class_names[0], class_names[1], class_names[2], class_names[3], class_names[4]])
+
 plt.show()
