@@ -166,6 +166,21 @@ print("Explained Variance Ratio for PC2:", explained_var_ratio[1])
 print(pca.components_)
 #data_top = XHeat.head() 
 
+# Calcular la matriz de covarianza
+cov_matrix = np.cov(X, rowvar=False)
+
+print("Matriz de Covarianza:")
+print(cov_matrix)
+
+# Aplicar PCA con NumPy
+eigenvalues, eigenvectors = np.linalg.eig(cov_matrix)
+
+print("\nValores Propios (Eigenvalues):")
+print(eigenvalues)
+
+print("\nVectores Propios (Eigenvectors):")
+print(eigenvectors)
+
 # print(XHeat.columns)
 df_comp = pd.DataFrame(pca.components_, columns=XHeat.columns)
 plt.figure(figsize=(16, 8))
