@@ -80,31 +80,3 @@ grid_object = GridSearchCV(estimator=dt, param_grid= grid_params, scoring='accur
 grid_object.fit(x_train, y_train)
 
 print('Best parameters for decision Tree:', grid_object.best_params_)
-
-# from six import StringIO
-# from IPython.display import Image
-# from sklearn.tree import export_graphviz
-# import pydotplus
-# from sklearn import tree
-
-# dt.fit(features, target)
-
-# feature_names = df.drop(
-#      [
-#         'transtornos_mentales',
-#         'miedo_generalizado',
-#         'ideacion_suicida',
-#         'aislamiento',
-#         'estres',
-#         'perdida_memoria',
-#         'niebla_cerebral',
-#         'depresion',
-#         'ansiedad'
-#     ]
-#     , axis = 1)
-
-# data = tree.export_graphviz(dt, out_file=None, feature_names=feature_names.columns.values, proportion=True)
-
-# graph = pydotplus.graph_from_dot_data(data)
-
-# graph.write_pdf("postCovidTree-1.pdf")

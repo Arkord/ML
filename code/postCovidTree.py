@@ -109,36 +109,3 @@ plt.yticks(tick_marks, labels)
 plt.title('Confusion Matrix - Trastornos mentales')
 plt.show()
 
-# sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
-# plt.xlabel('Predicted Labels')
-# plt.ylabel('True Labels')
-# tick_marks = np.arange(len(labels))
-# plt.xticks(tick_marks, labels)
-# plt.yticks(tick_marks, labels)
-# plt.title('Confusion Matrix - Trastornos mentales')
-# plt.show()
-
-# Step 6: Compute evaluation metrics
-# metrics = classification_report(y_test, y_pred, output_dict=True)
-
-# # Step 7: Prepare the data for plotting
-# class_names = list(metrics.keys())[:2]
-# precision = [metrics[class_name]['precision'] for class_name in class_names]
-# recall = [metrics[class_name]['recall'] for class_name in class_names]
-# f1_score = [metrics[class_name]['f1-score'] for class_name in class_names]
-
-# # Step 8: Plot the metrics
-# x = range(len(class_names))
-# width = 0.2
-
-# plt.bar(x, precision, width, label='Precision')
-# plt.bar(x, recall, width, label='Recall', bottom=precision)
-# plt.bar(x, f1_score, width, label='F1-score', bottom=[p + r for p, r in zip(precision, recall)])
-
-# plt.xlabel('Class')
-# plt.ylabel('Score')
-# plt.title('Evaluation Metrics')
-# plt.xticks(x, class_names)
-# plt.legend()
-# plt.show()
-
